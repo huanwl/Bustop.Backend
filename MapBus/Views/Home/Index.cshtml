@@ -1,0 +1,181 @@
+﻿@{
+    Layout = "";
+}
+
+<html>
+<head>
+    <style>
+        #wrapper{
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        /* Always set the map height explicitly to define the size of the div
+            * element that contains the map. */
+        #map {
+            height: 90%;
+            width: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        var markersArray = [];
+        var map;
+        var service;
+        var infowindow;
+        function initMap() {
+            infowindow = new google.maps.InfoWindow();
+
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 25.002845309945233, lng: 121.51857574692312 },
+                zoom: 15,
+            });
+            map.setOptions({ styles: hideStyles });
+
+            service = new google.maps.places.PlacesService(map);
+        }
+
+        const hideStyles = [
+            {
+                featureType: "poi.business",
+                stylers: [{ visibility: "off" }],
+            },
+            //{
+            //    featureType: "transit",
+            //    elementType: "labels.icon",
+            //    stylers: [{ visibility: "off" }],
+            //},
+        ];
+
+        function clearAllMarkets() {
+            for (var i = 0; i < markersArray.length; i++ ) {
+                markersArray[i].setMap(null);
+            }
+            markersArray.length = 0;
+        }
+
+        function getBusRoute() {
+            $("#route-select option").remove();
+
+            let cityName = $("#city-select").val();
+            if (cityName == "") {
+                return;
+            }
+
+            $.ajax({
+                method: "GET",
+                url: "https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/" + cityName + "?$top=100&$format=JSON",
+            })
+            .done(function(data) {
+                console.log(data);
+                for (let i = 0; i < data.length; i++) {
+                    var routeName = data[i].RouteName.Zh_tw;
+                    $("#route-select").append($("<option></option>").attr("value", routeName).text(routeName));
+                }
+                console.log(markersArray);
+            });
+        }
+
+        function search() {
+            clearAllMarkets();
+
+            let cityName = $("#city-select").val();
+            let routeName = $("#route-select").val();
+            $.ajax({
+                method: "GET",
+                url: "https://ptx.transportdata.tw/MOTC/v2/Bus/RealTimeByFrequency/City/" + cityName + "/" + routeName + "?$top=100&$format=JSON",
+            })
+            .done(function(data) {
+                console.log(data);
+                if (data.length == 0) {
+                    alert('此路線目前沒有公車資料!');
+                }
+                else {
+                    for (let i = 0; i < data.length; i++) {
+                        var marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(data[i].BusPosition.PositionLat, data[i].BusPosition.PositionLon),
+                            icon: "https://ebus.gov.taipei/images/images-sm/%E4%B8%80%E8%88%AC%E5%85%AC%E8%BB%8A%E5%90%91%E5%8F%B3%E9%82%8A.gif",
+                            map: map,
+                        });
+                        markersArray.push(marker);
+                    }
+                }
+                console.log(markersArray);
+            });
+        }
+
+        function find() {
+            var request = {
+                query: $("#address").val(),
+                fields: ['name', 'geometry'],
+            };
+
+            service.findPlaceFromQuery(request, function(results, status) {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    for (var i = 0; i < results.length; i++) {
+                        createMarker(results[i]);
+                    }
+                    map.setCenter(results[0].geometry.location);
+                    console.log(results);
+                }
+            });
+        }
+
+        function createMarker(place) {
+            if (!place.geometry || !place.geometry.location) return;
+
+            const marker = new google.maps.Marker({
+                map,
+                position: place.geometry.location,
+            });
+
+            google.maps.event.addListener(marker, "click", () => {
+                infowindow.setContent(place.name || "");
+                infowindow.open({anchor: marker, map, shouldFocus: false});
+            });
+
+            console.log("(" + place.geometry.location.lat() + ", " + place.geometry.location.lng() + ")");
+        }
+    </script>
+    <script>
+        $(function () {
+            //getBusRoute();
+        });
+    </script>
+</head>
+    <body>
+        <div id="wrapper">
+            <div>
+                <select id="city-select" onchange="getBusRoute()">
+                    <option value="">請選擇</option>
+                    <option value="Taipei">臺北市</option>
+                    <option value="NewTaipei">新北市</option>
+                    <option value="Taoyuan">桃園市</option>
+                    <option value="Taichung">臺中市</option>
+                    <option value="Tainan">臺南市</option>
+                    <option value="Kaohsiung">高雄市</option>
+                </select>
+                <select id="route-select">
+                </select>
+                <input id="search" type="button" value="查詢" onclick="search()"/>
+                <input id="reset" type="button" value="清除" onclick="clearAllMarkets()"/>
+            </div>
+            <div>
+                <input id="address" type="text" placeholder="請輸入地點" />
+                <input type="button" value="查詢" onclick="find()" />
+            </div>
+            <div id="map"></div>
+        </div>
+        <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_AGpY4TNRCXEzS_eGngFW40dp7OKsJNI&callback=initMap&v=weekly&libraries=places"
+                async></script>
+    </body>
+</html>
