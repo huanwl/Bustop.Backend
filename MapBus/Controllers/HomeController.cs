@@ -8,16 +8,19 @@ using Microsoft.Extensions.Logging;
 using MapBus.Models;
 using Npgsql;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 
 namespace MapBus.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IConfiguration _configuration;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
 
         public IActionResult Index()
@@ -27,7 +30,7 @@ namespace MapBus.Controllers
 
         public IActionResult Privacy()
         {
-            var connStr = "Server=ec2-18-208-97-23.compute-1.amazonaws.com;Port=5432;Database=dckhnn9qf2gb8n;User Id=jkttkauwxxqexe;Password=294e75fe05304438ff43d677fd7a68953f0b2f26e28524d71acd28b8b5f929dc;";
+            var connStr = _configuration["ConnectionString"];
             using (var conn = new NpgsqlConnection(connStr))
             {
                 var querySQL = "select account from public.\"User\";";
