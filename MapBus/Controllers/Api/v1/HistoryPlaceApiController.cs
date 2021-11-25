@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MapBus.Controllers.Api.v1
 {
-    public class HistoryPlaceApiController : ControllerBase
+    public class HistoryPlaceApiController : BaseApiController
     {
         private readonly IConfiguration _configuration;
 
@@ -52,9 +52,7 @@ namespace MapBus.Controllers.Api.v1
                 result.Message = "Not login";
             }
 
-            Response.Headers.Add("Access-Control-Allow-Origin", "https://mila1412.github.io, localhost");
-
-            return Ok(result);
+            return CrossOrigin_Ok(result);
         }
 
         [HttpPost]
@@ -92,9 +90,7 @@ namespace MapBus.Controllers.Api.v1
                 result.Message = "Not login";
             }
 
-            Response.Headers.Add("Access-Control-Allow-Origin", "https://mila1412.github.io, localhost");
-
-            return Ok(result);
+            return CrossOrigin_Ok(result);
         }
     }
 }

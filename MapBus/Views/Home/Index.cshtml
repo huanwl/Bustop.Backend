@@ -277,7 +277,17 @@
     </script>
     <script>
         $(function () {
-            //getBusRoute();
+             $.ajax({
+                method: "POST",
+                url: "https://map-bus.herokuapp.com/api/user/login",
+                contentType : 'application/json; charset=utf-8',
+                data: {
+                    token: ''
+                }
+            })
+            .done(function(data) {
+                console.log(data);
+            });
         });
     </script>
 </head>

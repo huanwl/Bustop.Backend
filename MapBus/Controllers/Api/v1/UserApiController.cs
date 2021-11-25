@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MapBus.Controllers.Api.v1
 {
-    public class UserApiController : ControllerBase
+    public class UserApiController : BaseApiController
     {
         private readonly IConfiguration _configuration;
 
@@ -46,9 +46,7 @@ namespace MapBus.Controllers.Api.v1
                 }
             }     
 
-            Response.Headers.Add("Access-Control-Allow-Origin", "https://mila1412.github.io, localhost");
-
-            return Ok(result);
+            return CrossOrigin_Ok(result);
         }
     }
 }
