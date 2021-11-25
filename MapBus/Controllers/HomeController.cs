@@ -9,6 +9,8 @@ using MapBus.Models;
 using Npgsql;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using System.Net.Http;
+using System.Text;
 
 namespace MapBus.Controllers
 {
@@ -30,10 +32,9 @@ namespace MapBus.Controllers
 
         public IActionResult Privacy()
         {
-            var connStr = _configuration["ConnectionString"];
-            using (var conn = new NpgsqlConnection(connStr))
+            using (var conn = new NpgsqlConnection(_configuration["ConnectionString"]))
             {
-                var querySQL = "select account from public.\"User\";";
+                var querySQL = "select account from public.end_user;";
                 var result = conn.Query<string>(querySQL).ToList();
                 ViewBag.Account = result[0];
             }
