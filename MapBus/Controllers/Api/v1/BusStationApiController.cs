@@ -47,7 +47,7 @@ namespace MapBus.Controllers.Api.v1
             var result = new ResultModel
             {
                 Success = true,
-                Data = stations.Take(20)
+                Data = stations.Take(1)
             };
             return CrossOrigin_Ok(result);
         }
@@ -80,6 +80,7 @@ namespace MapBus.Controllers.Api.v1
                         {
                             station.RouteStops.Add(new RouteStopModel
                             {
+                                StationUID = a["StationUID"].ToString(),
                                 RouteUID = b["RouteUID"].ToString(),
                                 RouteName = b["RouteName"]["Zh_tw"].ToString(),
                                 StopUID = b["StopUID"].ToString(),

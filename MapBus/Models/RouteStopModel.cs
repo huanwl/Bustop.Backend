@@ -7,6 +7,8 @@ namespace MapBus.Models
 {
     public class RouteStopModel
     {
+        public string StationUID { get; set; }
+
         public string RouteUID { get; set; }
 
         public string RouteName { get; set; }

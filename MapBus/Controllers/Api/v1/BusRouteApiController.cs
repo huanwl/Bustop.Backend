@@ -49,7 +49,7 @@ namespace MapBus.Controllers.Api.v1
             var result = new ResultModel
             {
                 Success = true,
-                Data = routes.Take(20)
+                Data = routes.Take(1)
             };
             return CrossOrigin_Ok(result);
         }
