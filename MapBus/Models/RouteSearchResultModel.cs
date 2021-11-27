@@ -17,6 +17,10 @@ namespace MapBus.Models
 
         public int LastStopDistance { get; set; }
 
+        public int FirstStopSeconds { get; set; }
+
+        public int LastStopSeconds { get; set; }
+
         public List<StopModel> Stops { get; set; }
     }
 }

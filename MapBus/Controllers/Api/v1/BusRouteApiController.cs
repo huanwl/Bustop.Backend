@@ -143,7 +143,7 @@ namespace MapBus.Controllers.Api.v1
                 x.Distance = (int)sCoord.GetDistanceTo(eCoord);
             });
             nearToRoutes.ForEach(x => {
-                var sCoord = new GeoCoordinate(parameter.From_Lat, parameter.From_Lng);
+                var sCoord = new GeoCoordinate(parameter.To_Lat, parameter.To_Lng);
                 var eCoord = new GeoCoordinate(x.PositionLat, x.PositionLng);
                 x.Distance = (int)sCoord.GetDistanceTo(eCoord);
             });
@@ -171,6 +171,7 @@ namespace MapBus.Controllers.Api.v1
                 var toStops = nearToRoutes.FindAll(x => x.RouteUID == r.RouteUID)
                                           .OrderBy(x => x.Distance).ToList();
                 int firstStopDistance = 0;
+                int firstStopSeconds = 0;
                 StopModel fromStop = null;
                 foreach (var s in fromStops)
                 {
@@ -178,11 +179,13 @@ namespace MapBus.Controllers.Api.v1
                     if (fromStop != null)
                     {
                         firstStopDistance = s.Distance;
+                        firstStopSeconds = s.Seconds;
                         break;
                     }
                 }
 
                 int lastStopDistance = 0;
+                int lastStopSeconds = 0;
                 StopModel toStop = null;
                 foreach (var s in toStops)
                 {
@@ -190,6 +193,7 @@ namespace MapBus.Controllers.Api.v1
                     if (toStop != null)
                     {
                         lastStopDistance = s.Distance;
+                        lastStopSeconds = s.Seconds;
                         break;
                     }
                 }
@@ -208,6 +212,8 @@ namespace MapBus.Controllers.Api.v1
                         RouteName = r.RouteName,
                         FirstStopDistance = firstStopDistance,
                         LastStopDistance = lastStopDistance,
+                        FirstStopSeconds = firstStopSeconds,
+                        LastStopSeconds = lastStopSeconds,
                         GapStopCount = gapStopCount,
                         Stops = keyStops
                     };
@@ -216,8 +222,7 @@ namespace MapBus.Controllers.Api.v1
             }
 
             // 結果排序
-            searchResults = searchResults.OrderBy(x => x.FirstStopDistance + x.LastStopDistance)
-                                         .ThenBy(x => x.GapStopCount)
+            searchResults = searchResults.OrderBy(x => x.FirstStopDistance + x.LastStopDistance + x.GapStopCount*100)
                                          .ToList();
 
             result.Success = true;

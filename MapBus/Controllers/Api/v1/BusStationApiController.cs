@@ -81,6 +81,7 @@ namespace MapBus.Controllers.Api.v1
                             station.RouteStops.Add(new RouteStopModel
                             {
                                 RouteUID = b["RouteUID"].ToString(),
+                                RouteName = b["RouteName"]["Zh_tw"].ToString(),
                                 StopUID = b["StopUID"].ToString(),
                                 StopName = b["StopName"]["Zh_tw"].ToString(),
                                 PositionLat = station.PositionLat,

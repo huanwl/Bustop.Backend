@@ -9,6 +9,8 @@ namespace MapBus.Models
     {
         public string RouteUID { get; set; }
 
+        public string RouteName { get; set; }
+
         public string StopUID { get; set; }
 
         public string StopName { get; set; }
@@ -18,5 +20,13 @@ namespace MapBus.Models
         public double PositionLng { get; set; }
 
         public int Distance { get; set; }
+
+        public int Seconds
+        {
+            get
+            {
+                return (Distance * 100) / 70;
+            }
+        }
     }
 }
