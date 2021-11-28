@@ -57,7 +57,7 @@ namespace MapBus.Controllers.Api.v1
 
         [HttpPost]
         [Route("/api/history_places")]
-        public IActionResult Create([FromBody]HistoryPlacesCreateParameter parameter)
+        public IActionResult Create([FromForm]HistoryPlacesCreateParameter parameter)
         {
             var result = new ResultModel();
 

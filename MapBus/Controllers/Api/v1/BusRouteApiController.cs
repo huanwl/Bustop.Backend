@@ -97,7 +97,7 @@ namespace MapBus.Controllers.Api.v1
 
         [HttpPost]
         [Route("/api/bus_routes/search")]
-        public IActionResult Search([FromBody]BusRouteSearchParameter parameter)
+        public IActionResult Search([FromForm]BusRouteSearchParameter parameter)
         {
             var result = new ResultModel();
 

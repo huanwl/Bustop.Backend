@@ -22,7 +22,7 @@ namespace MapBus.Controllers.Api.v1
 
         [HttpPost]
         [Route("/api/user/login")]
-        public IActionResult Login([FromBody]LoginParameter parameter)
+        public IActionResult Login([FromForm]LoginParameter parameter)
         {
             var result = new ResultModel();
 

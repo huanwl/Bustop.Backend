@@ -57,7 +57,7 @@ namespace MapBus.Controllers.Api.v1
 
         [HttpPost]
         [Route("/api/favorite_places")]
-        public IActionResult Create([FromBody]FavoritePlacesCreateParameter parameter)
+        public IActionResult Create([FromForm]FavoritePlacesCreateParameter parameter)
         {
             var result = new ResultModel();
 

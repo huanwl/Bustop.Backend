@@ -25,7 +25,7 @@ namespace MapBus.Controllers.Api.v1
 
         [HttpPost]
         [Route("/api/bus_stops/search")]
-        public IActionResult Search([FromBody]BusStopSearchParameter parameter)
+        public IActionResult Search([FromForm]BusStopSearchParameter parameter)
         {
             var result = new ResultModel();
 
