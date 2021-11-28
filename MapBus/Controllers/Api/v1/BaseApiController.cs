@@ -26,7 +26,7 @@ namespace MapBus.Controllers.Api.v1
         public OkObjectResult CrossOrigin_Ok(object val)
         {
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
-            Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST");
+            Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
             Response.Headers.Add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept");
             return Ok(val);
         }
